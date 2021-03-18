@@ -1,8 +1,10 @@
 
-import React from 'react'
+import React from 'react';
 
-import {View, Text, TouchableOpacity, StyleSheet, Image,  } from 'react-native'
-const StartPage = () => {
+import {View, Text, TouchableOpacity, StyleSheet, Image,  } from 'react-native';
+import questions from './data';
+
+const StartPage = ({navigation}) => {
     return (
       <View style={styles.container}>
           <View style={styles.welcome}>
@@ -10,7 +12,11 @@ const StartPage = () => {
           </View>
           <Image style={styles.imagehi} source={require('../assets/hi1.png')}/>
           <View style={styles.start}>
-          <TouchableOpacity onPress={console.log('hello world')} style={styles.startbut} color='pink' activeOpacity={0.5}>
+          <TouchableOpacity 
+          onPress={() => navigation.navigate('Question1', { count : 0})} 
+          style={styles.startbut} 
+          color='pink' 
+          activeOpacity={0.5}>
               <Text style={styles.buttext}>Start Quiz</Text>
           </TouchableOpacity>
           </View>

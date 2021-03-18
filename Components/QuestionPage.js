@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import questions from './data';
 
-const Options = ({props}) => {
+const Options = ({option, ans}) => {
+
+    const [flag,setFlag]=useState(false)
     return(
-        <View style={{flexDirection: 'row', }}>
-            <View style={styles.optnum}>
-                <Text style={{fontSize: 18, fontWeight: 'bold', textAlign: 'center', color: 'white'}}>{props.id}</Text>
-            </View>
+        <View style={{flexDirection: 'row', justifyContent: 'center' }}>
             <TouchableOpacity 
-            style={styles.opt} 
-            activeOpacity={0.5}>
-                <Text style={{fontWeight: 'bold', fontSize: 18, color: 'white', opacity: 1, textAlign: 'center'}}>{props.option}</Text>
+            onPress={()  => setFlag(true)}
+            style={[styles.opt, flag ? ans ? {backgroundColor: 'green'} : {backgroundColor: 'red'} : {backgroundColor: 'dimgrey'}]} 
+            activeOpacity={0.5}
+            >
+                <Text style={{fontWeight: 'bold', fontSize: 18, color: 'white', opacity: 1, textAlign: 'center'}}>{option} </Text>
             </TouchableOpacity>
         </View>
     )
@@ -18,33 +20,28 @@ const Options = ({props}) => {
 
 
 
-const QuestionPage = () => {
+const QuestionPage1 = ({navigation, route}) => {
 
-    const [optionsList, setOptionsList] = useState([
-        {id: 1, option: "MODI JI", ans: true},
-        {id: 2, option: "DONALD TRUMP", ans: false},
-        {id: 3, option: "VLADMIR PUTIN", ans: false},
-        {id: 4, option: "JOE BIDEN", ans: false},
-    ])
+    const [totalCount, setTotalCount] = useState(questions.length)
+
     return(
+
         <View style={styles.container}>
             <View style={styles.QuestionBox}>
-                <Text style={styles.ques}>who is PM of INDIA?</Text>
+                <Text style={styles.ques}>{questions[route.params.count].question}</Text>
             </View>
             <View style={styles.OptionBoxMain}>
-                {optionsList.map((item) => (
-                    <Options props={item} key={item.id}/>
+                {questions[route.params.count].answers.map(item => (
+                    <Options 
+                    key={item.id}
+                    option = {item.option}
+                    ans = {item.ans}
+                    />
                 ))}
             </View>
             <View style={styles.FooterMain}>
-                <TouchableOpacity style={styles.Submit}>
-
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.Back}>
-
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.Next}>
-
+                <TouchableOpacity style={styles.Next} onPress={() => route.params.count < totalCount-1 ? navigation.navigate('Question1', { count: route.params.count + 1 }) : navigation.navigate('Result') }>
+                    <Text style={{fontSize:25,fontWeight:'bold',color: 'blue', textAlign: 'center'}} >NEXT</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.QuesNum}>
@@ -76,7 +73,7 @@ const styles = StyleSheet.create({
     },
     ques: {
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: 24,
         fontWeight: 'bold',
     },
     OptionBoxMain: {
@@ -86,8 +83,6 @@ const styles = StyleSheet.create({
         borderTopEndRadius:80,
         borderTopLeftRadius:10,
         paddingTop: 40,
-        //position:'relative',
-        //alignItems:'center',
     },
     opt: {
         backgroundColor:'dimgrey',
@@ -95,19 +90,10 @@ const styles = StyleSheet.create({
         height:50,
         width:300,
         justifyContent: 'center',
-    },
-    
-    optnum: {
-        height:50,
-        width:50,
-        backgroundColor:'slategray',
-
-        borderRadius:30,
         marginHorizontal: 16,
         marginBottom: 20,
-        justifyContent: 'center'
     },
-  
+    
     FooterMain: {
         height:85,
         width:'100%',
@@ -117,37 +103,18 @@ const styles = StyleSheet.create({
         top:574,
         borderTopLeftRadius:15,
         borderTopRightRadius:15,
-    },
-    Submit: {
-        //backgroundColor:'#BFC6B9',
-        backgroundColor:'white',
-        //opacity:0.5,
-        height:50,
-        width:150,
-        margin:15,
-        marginLeft:130,
-        borderRadius:20,
-    },
-    Back: {
-        backgroundColor:'#EFD3EF',
-        position:'absolute',
-        opacity:0.8,
-        height:50,
-        width:100,
-        margin:10,
-        top:7,
-        borderRadius:20,
+        alignItems: 'center',
     },
     Next: {
         backgroundColor:'#EFD3EF',
         position:'absolute',
         opacity:0.8,
-        height:50,
-        width:100,
+        height:60,
+        width:150,
         margin:10,
-        top:7,
         marginLeft:300,
         borderRadius:20,
+        justifyContent: 'center'
     },
     QuesNum: {
         width:40,
@@ -162,4 +129,4 @@ const styles = StyleSheet.create({
 
     }
 })
-export default QuestionPage;
+export default QuestionPage1;
