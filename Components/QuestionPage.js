@@ -3,25 +3,24 @@ import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import questions from './data';
 // import Options from './Option';
 
-const Options = ({option, ans, score}) => {
+const Options = ({option, ans , score}) => {
 
     const [flag,setFlag]=useState(false)
-    const [updatedScore, setUpdatedScore] = useState({score})
-    const [initialScore, setInitialScore] = useState({score})
-
     useEffect(()=> {
-        if (flag == true && updatedScore == initialScore) {
-            score = score + 1
+        if (flag == true && ans) {
+            score=score+1
+            
         }
-    }), [flag, updatedScore];
+    }), [flag];
     return(
         <View style={{flexDirection: 'row', justifyContent: 'center' }}>
             <TouchableOpacity 
             onPress={() => setFlag(true)}
             style={[styles.opt , flag ? ans ? {backgroundColor: 'green'}:  {backgroundColor: 'red'} : {backgroundColor: 'dimgrey'}]}
             activeOpacity={0.5}
+            
             >
-                <Text style={{fontWeight: 'bold', fontSize: 18, color: 'white', opacity: 1, textAlign: 'center'}}>{option} {score} </Text>
+                <Text style={{fontWeight: 'bold', fontSize: 18, color: 'white', opacity: 1, textAlign: 'center'}}>{option} </Text>
             </TouchableOpacity>
         </View>
     )
@@ -31,7 +30,7 @@ const Options = ({option, ans, score}) => {
 const QuestionPage1 = ({navigation, route}) => {
 
     const [totalCount, setTotalCount] = useState(questions.length)
-
+    const [correctCount,setCorrectCount]=useState(0)
     return(
 
         <View style={styles.container}>
@@ -44,8 +43,9 @@ const QuestionPage1 = ({navigation, route}) => {
                     key={item.id}
                     option = {item.option}
                     ans = {item.ans}
-                    score = {route.params.score}
+                    score = {correctCount}
                     />
+                    
                 ))}
             </View>
             <View style={styles.FooterMain}>
@@ -55,9 +55,9 @@ const QuestionPage1 = ({navigation, route}) => {
                 route.params.count < totalCount-1 ? 
                 navigation.push(
                     'Question1', 
-                    { count: route.params.count + 1, score : route.params.score }
+                    { count: route.params.count + 1}
                 ) :
-                navigation.navigate('Result', { score : route.params.score }) }
+                navigation.push('Result', { score : correctCount, no_of_ques : totalCount }) }
                 >
                     <Text style={{fontSize:25,fontWeight:'bold',color: 'blue', textAlign: 'center'}} >NEXT</Text>
                 </TouchableOpacity>

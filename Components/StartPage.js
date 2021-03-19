@@ -13,7 +13,7 @@ const StartPage = ({navigation}) => {
           <Image style={styles.imagehi} source={require('../assets/hi1.png')}/>
           <View style={styles.start}>
           <TouchableOpacity 
-          onPress={() => navigation.navigate('Question1', { count : 0, score : 1})} 
+          onPress={() => navigation.navigate('Question1', { count : 0})} 
           style={styles.startbut} 
           color='pink' 
           activeOpacity={0.5}>
