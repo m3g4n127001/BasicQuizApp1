@@ -1,23 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import questions from './data';
+// import Options from './Option';
 
-const Options = ({option, ans}) => {
+const Options = ({option, ans, score}) => {
 
     const [flag,setFlag]=useState(false)
+    const [updatedScore, setUpdatedScore] = useState({score})
+    const [initialScore, setInitialScore] = useState({score})
+
+    useEffect(()=> {
+        if (flag == true && updatedScore == initialScore) {
+            score = score + 1
+        }
+    }), [flag, updatedScore];
     return(
         <View style={{flexDirection: 'row', justifyContent: 'center' }}>
             <TouchableOpacity 
-            onPress={()  => setFlag(true)}
-            style={[styles.opt, flag ? ans ? {backgroundColor: 'green'} : {backgroundColor: 'red'} : {backgroundColor: 'dimgrey'}]} 
+            onPress={() => setFlag(true)}
+            style={[styles.opt , flag ? ans ? {backgroundColor: 'green'}:  {backgroundColor: 'red'} : {backgroundColor: 'dimgrey'}]}
             activeOpacity={0.5}
             >
-                <Text style={{fontWeight: 'bold', fontSize: 18, color: 'white', opacity: 1, textAlign: 'center'}}>{option} </Text>
+                <Text style={{fontWeight: 'bold', fontSize: 18, color: 'white', opacity: 1, textAlign: 'center'}}>{option} {score} </Text>
             </TouchableOpacity>
         </View>
     )
 }
-
 
 
 const QuestionPage1 = ({navigation, route}) => {
@@ -36,11 +44,21 @@ const QuestionPage1 = ({navigation, route}) => {
                     key={item.id}
                     option = {item.option}
                     ans = {item.ans}
+                    score = {route.params.score}
                     />
                 ))}
             </View>
             <View style={styles.FooterMain}>
-                <TouchableOpacity style={styles.Next} onPress={() => route.params.count < totalCount-1 ? navigation.navigate('Question1', { count: route.params.count + 1 }) : navigation.navigate('Result') }>
+                <TouchableOpacity 
+                style={styles.Next} 
+                onPress={() => 
+                route.params.count < totalCount-1 ? 
+                navigation.push(
+                    'Question1', 
+                    { count: route.params.count + 1, score : route.params.score }
+                ) :
+                navigation.navigate('Result', { score : route.params.score }) }
+                >
                     <Text style={{fontSize:25,fontWeight:'bold',color: 'blue', textAlign: 'center'}} >NEXT</Text>
                 </TouchableOpacity>
             </View>
@@ -84,6 +102,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius:10,
         paddingTop: 40,
     },
+   
     opt: {
         backgroundColor:'dimgrey',
         borderRadius:15,
@@ -93,7 +112,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         marginBottom: 20,
     },
-    
     FooterMain: {
         height:85,
         width:'100%',

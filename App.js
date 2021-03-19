@@ -13,7 +13,7 @@ import {createStackNavigator} from '@react-navigation/stack';
  import StartPage from './Components/StartPage';
 import QuestionPage1 from './Components/QuestionPage';
 import ResultPage from './Components/ResultPage';
- const Stack = createStackNavigator();
+const Stack = createStackNavigator();
  
  const App = () => {
    return(
