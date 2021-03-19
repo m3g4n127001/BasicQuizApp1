@@ -1,36 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import questions from './data';
-// import Options from './Option';
-
-const Options = ({option, ans , score}) => {
-
-    const [flag,setFlag]=useState(false)
-    useEffect(()=> {
-        if (flag == true && ans) {
-            score=score+1
-            
-        }
-    }), [flag];
-    return(
-        <View style={{flexDirection: 'row', justifyContent: 'center' }}>
-            <TouchableOpacity 
-            onPress={() => setFlag(true)}
-            style={[styles.opt , flag ? ans ? {backgroundColor: 'green'}:  {backgroundColor: 'red'} : {backgroundColor: 'dimgrey'}]}
-            activeOpacity={0.5}
-            
-            >
-                <Text style={{fontWeight: 'bold', fontSize: 18, color: 'white', opacity: 1, textAlign: 'center'}}>{option} </Text>
-            </TouchableOpacity>
-        </View>
-    )
-}
 
 
 const QuestionPage1 = ({navigation, route}) => {
 
     const [totalCount, setTotalCount] = useState(questions.length)
-    const [correctCount,setCorrectCount]=useState(0)
+    const [correct, setCorrect] = useState([
+        {flag : false, correctCount : 0}
+    ])
+
     return(
 
         <View style={styles.container}>
@@ -39,12 +18,26 @@ const QuestionPage1 = ({navigation, route}) => {
             </View>
             <View style={styles.OptionBoxMain}>
                 {questions[route.params.count].answers.map(item => (
-                    <Options 
-                    key={item.id}
-                    option = {item.option}
-                    ans = {item.ans}
-                    score = {correctCount}
-                    />
+                    <View style={{flexDirection: 'row', justifyContent: 'center' }}>
+                        <TouchableOpacity 
+                        onPress={() => {
+                            if (item.ans && correct.correctCount !=1 && correct.correctCount!=0) {
+                                setCorrect((e) => ({
+                                    ...e, flag: true, correctCount : 1
+                                }))
+                            }
+                            else if(correct.correctCount !=1) {
+                                setCorrect((e) => ({
+                                    ...e, flag: true, correctCount: 0
+                                }))
+                            } 
+                        }} 
+                        style={[styles.opt , correct.flag  ? item.ans ? {backgroundColor: 'green'}:  {backgroundColor: 'red'} : {backgroundColor: 'dimgrey'}]}
+                        activeOpacity={0.5}
+                        >
+                            <Text style={{fontWeight: 'bold', fontSize: 18, color: 'white', opacity: 1, textAlign: 'center'}}>{item.option}</Text>
+                        </TouchableOpacity>
+                    </View>
                     
                 ))}
             </View>
@@ -52,18 +45,21 @@ const QuestionPage1 = ({navigation, route}) => {
                 <TouchableOpacity 
                 style={styles.Next} 
                 onPress={() => 
-                route.params.count < totalCount-1 ? 
-                navigation.push(
-                    'Question1', 
-                    { count: route.params.count + 1}
-                ) :
-                navigation.push('Result', { score : correctCount, no_of_ques : totalCount }) }
+                correct.flag ?
+                    route.params.count < totalCount-1 ? 
+                    navigation.push(
+                        'Question1', 
+                        { count: route.params.count + 1, score : route.params.score + correct.correctCount}
+                    ) :
+                    navigation.push('Result', { score : route.params.score + correct.correctCount, no_of_ques : totalCount }) 
+                    : alert("please select any option")
+                }
                 >
                     <Text style={{fontSize:25,fontWeight:'bold',color: 'blue', textAlign: 'center'}} >NEXT</Text>
                 </TouchableOpacity>
             </View>
             <View style={styles.QuesNum}>
-                <Text style={{textAlign: 'center', fontWeight: '600', fontSize: 20}}>1</Text>
+                <Text style={{textAlign: 'center', fontWeight: '600', fontSize: 20}}>{route.params.count+1}</Text>
             </View>
         </View>
     )
