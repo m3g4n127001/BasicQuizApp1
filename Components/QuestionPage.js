@@ -1,24 +1,34 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import questions from './data';
+import { View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import { block } from 'react-native-reanimated';
+// import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
+const QuestionPage = ({navigation, route}) => {
 
-const QuestionPage1 = ({navigation, route}) => {
-
-    const [totalCount, setTotalCount] = useState(questions.length)
+    const [totalCount, setTotalCount] =  useState(route.params.questions.length)
     const [correct, setCorrect] = useState([
         {flag : false, correctCount : 0}
     ])
 
     return(
 
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: route.params.color}]}>
+            <View style={styles.mainbar}>
+                <LinearGradient
+                start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+                colors={[route.params.color , 'white']}
+                style={{width: (route.params.count/totalCount)*411 , height: 10, marginRight: -0.8}}
+                >
+                </LinearGradient>
+                <Text style={styles.number}>{route.params.count+1}</Text>
+            </View>
             <View style={styles.QuestionBox}>
-                <Text style={styles.ques}>{questions[route.params.count].question}</Text>
+                <Text style={styles.ques}>{route.params.questions[route.params.count].question}</Text>
             </View>
             <View style={styles.OptionBoxMain}>
-                {questions[route.params.count].answers.map(item => (
-                    <View style={{flexDirection: 'row', justifyContent: 'center' }}>
+                {route.params.questions[route.params.count].answers.map(item => (
+                    <View style={{flexDirection: 'row', justifyContent: 'center' }} key={item.id}>
                         <TouchableOpacity 
                         onPress={() => {
                             if (item.ans && correct.correctCount !=1 && correct.correctCount!=0) {
@@ -32,10 +42,17 @@ const QuestionPage1 = ({navigation, route}) => {
                                 }))
                             } 
                         }} 
-                        style={[styles.opt , correct.flag  ? item.ans ? {backgroundColor: 'green'}:  {backgroundColor: 'red'} : {backgroundColor: 'dimgrey'}]}
-                        activeOpacity={0.5}
+                        style={styles.opt}
+                        activeOpacity={0.8}
                         >
-                            <Text style={{fontWeight: 'bold', fontSize: 18, color: 'white', opacity: 1, textAlign: 'center'}}>{item.option}</Text>
+                            <Text style={styles.opttxt}>{item.option}</Text>
+                            <View style={[styles.circle, correct.flag ? item.ans ? {display: 'flex'} : {display: "flex"} : {display: "none"}]}>
+                                <Image
+                                style={{width:"100%",height: "100%"}}
+                                source={correct.flag? item.ans ? require("../assets/tick.jpg") : require("../assets/cross.jpg") : require("../assets/cross.jpg")}
+
+                                />
+                            </View>
                         </TouchableOpacity>
                     </View>
                     
@@ -43,104 +60,110 @@ const QuestionPage1 = ({navigation, route}) => {
             </View>
             <View style={styles.FooterMain}>
                 <TouchableOpacity 
+                activeOpacity={0.7}
                 style={styles.Next} 
                 onPress={() => 
                 correct.flag ?
                     route.params.count < totalCount-1 ? 
                     navigation.push(
-                        'Question1', 
-                        { count: route.params.count + 1, score : route.params.score + correct.correctCount}
+                        'Question', 
+                        { count: route.params.count + 1, score : route.params.score + correct.correctCount , questions : route.params.questions, color: route.params.color}
                     ) :
-                    navigation.push('Result', { score : route.params.score + correct.correctCount, no_of_ques : totalCount }) 
+                    navigation.push('Result', { score : route.params.score + correct.correctCount, no_of_ques : totalCount , color: route.params.color}) 
                     : alert("please select any option")
                 }
                 >
-                    <Text style={{fontSize:25,fontWeight:'bold',color: 'blue', textAlign: 'center'}} >NEXT</Text>
+                    <Text style={{fontSize:25,fontWeight:'bold',color: 'blue', textAlign: 'center', color: "black"}} >NEXT</Text>
                 </TouchableOpacity>
-            </View>
-            <View style={styles.QuesNum}>
-                <Text style={{textAlign: 'center', fontWeight: '600', fontSize: 20}}>{route.params.count+1}</Text>
             </View>
         </View>
     )
 }
 
-const styles = StyleSheet.create({
+
+const styles=StyleSheet.create({
     container: {
-        height:'100%',
-        width:'100%',
-        backgroundColor:'skyblue',
-        alignItems:'center',
-        opacity:0.8,
+        height: "100%",
+        width: "100%",
+        flex: 1,
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        paddingVertical: 20,
     },
     QuestionBox: {
-        height:200,
-        width:350,
-        backgroundColor: 'pink',
-        opacity:0.9,
-        top:30,
-        borderRadius:30,
-        borderBottomRightRadius:80,
-        borderBottomEndRadius:80,
-        marginBottom:50,
-        justifyContent: 'center'
+        backgroundColor: "white",
+        width: "80%",
+        height: "30%",
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 20,
     },
     ques: {
         textAlign: 'center',
-        fontSize: 24,
         fontWeight: 'bold',
+        fontSize: 24,
+        color: "black",
     },
     OptionBoxMain: {
-        height:500,
-        width:'100%',
-        backgroundColor:'#bda0cb',
-        borderTopEndRadius:80,
-        borderTopLeftRadius:10,
-        paddingTop: 40,
+        width: "80%",
+        height: "50%",
+        justifyContent: 'space-evenly',
+        
     },
-   
     opt: {
-        backgroundColor:'dimgrey',
-        borderRadius:15,
-        height:50,
-        width:300,
-        justifyContent: 'center',
-        marginHorizontal: 16,
-        marginBottom: 20,
+        width: "100%",
+        height: 60,
+        borderRadius: 30,
+        alignItems: 'center',
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        color: "black",
+        backgroundColor: "white",
+        paddingHorizontal: 20
+    },
+    opttxt: {
+        width: "85%",
+        color: "black",
+        fontSize: 20,
+        fontWeight: 'bold',
+        textAlign: 'left',
+        
     },
     FooterMain: {
-        height:85,
-        width:'100%',
-        backgroundColor :'#FFA199',
-       // opacity:0.2,
-        position:'absolute',
-        top:574,
-        borderTopLeftRadius:15,
-        borderTopRightRadius:15,
-        alignItems: 'center',
-    },
-    Next: {
-        backgroundColor:'#EFD3EF',
-        position:'absolute',
-        opacity:0.8,
-        height:60,
-        width:150,
-        margin:10,
-        marginLeft:300,
-        borderRadius:20,
+        width: "35%",
+        height: 50,
+        borderRadius: 30,
+        backgroundColor: "white",
         justifyContent: 'center'
     },
-    QuesNum: {
-        width:40,
-        height:40,
-        backgroundColor: 'yellow',
-        position:'absolute',
-        top:210,
-        left: 355,
-        borderRadius:20,
-        opacity: 0.7,
-        justifyContent: 'center'
-
+    mainbar: {
+        position: 'absolute',
+        top: 1,
+        width: "100%",
+        height: "4%",
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    number : {
+        width: 18,
+        height: 18,
+        backgroundColor: "white", 
+        borderRadius: 20, 
+        textAlign: 'center', 
+        padding: 2,
+        fontSize: 10,
+        fontWeight: 'bold'
+    },
+    circle: {
+        width: 24,
+        height: 24,
+        display: 'none',
+        marginLeft:0,
+        backgroundColor: "black"
     }
+
 })
-export default QuestionPage1;
+ export default QuestionPage;
