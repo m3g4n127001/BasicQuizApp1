@@ -1,2 +1,2 @@
 # BasicQuizApp1
-learning app dev
+My first react-native app.
