@@ -3,9 +3,9 @@ Designed and developed a mobile app that allows users to choose any topic and ta
 
 **Walkthrough of the App**
 
-* 1 image : As you open the app you are greeted by this image of all super heros.
-* 2 image : Once you click "enter the quizzing world" you can see many options available for you to take quiz on.
-* 3 image : Upon clicking on any of the options on the 2nd screen, your quiz starts and questions will appear with 4 options as showing in 3rd image. Typically, each topic will               have 10-15 questions.
+* 1 image : As you open the app you are greeted by this image containing all super her characters.
+* 2 image : Once you click on "enter the quizzing world" you can see many options available for you to take quiz on.
+* 3 image : Upon clicking on any of the options on the 2nd screen, your quiz starts and questions will appear with 4 options as shown in 3rd image. Typically, each topic will               have 10-15 questions.
 
 ![App Screenshots](https://github.com/m3g4n127001/BasicQuizApp1/blob/main/assets/app%20ss/1-2.png)
 
