@@ -27,7 +27,6 @@ import Topics from './Components/Topics';
        <Stack.Screen name="Result" component={ResultPage}/>
      </Stack.Navigator>
    </NavigationContainer>
-  // <StartPage/>
    )
  }
  
