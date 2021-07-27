@@ -13,4 +13,4 @@ Designed and developed a mobile app that allows users to choose any topic and ta
 * 5 image : The top question bar will grow when the user clicks next and ahead to the next questions. When it's full, the questions are finished, and the results are displayed as shown in the fifth image.
 * By clicking upon HOME button in result page, user will be redirected to home page (2nd image).
 
-![App Screenshots](https://github.com/m3g4n127001/BasicQuizApp1/blob/main/assets/app%20ss/1-3.png)
+![App Screenshots](https://github.com/m3g4n127001/BasicQuizApp1/blob/main/assets/app%20ss/1-4.png)
